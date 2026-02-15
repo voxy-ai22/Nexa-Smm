@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { ServiceType, ServiceConfig } from './types';
 
 export const SERVICES: Record<ServiceType, ServiceConfig> = {
@@ -17,4 +16,5 @@ export const SERVICES: Record<ServiceType, ServiceConfig> = {
   }
 };
 
-export const API_ENDPOINT = 'https://mirpedia.my.id/api/order';
+// API eksternal hanya boleh diakses melalui serverless function di /api/
+export const INTERNAL_API_PATH = '/api/order';

@@ -56,7 +56,7 @@ export const submitOrder = async (
   const service = SERVICES[serviceType];
 
   try {
-    // Memanggil API internal kita sendiri (Serverless Function)
+    // Request ke endpoint INTERNAL Vercel (/api/order.ts)
     const response = await fetch('/api/order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -69,6 +69,7 @@ export const submitOrder = async (
 
     const data = await response.json();
 
+    // Catat log lokal
     db.recordOrder(ip, service.id, {
       target_link: target,
       is_vpn: isVpn,
@@ -77,12 +78,12 @@ export const submitOrder = async (
     });
 
     if (data.status) {
-      return { success: true, orderId: data.data.id, message: 'Pesanan Berhasil Dikirim!' };
+      return { success: true, orderId: data.data.id, message: '🔥 BOOSTER AKTIF! Pesanan diproses.' };
     } else {
       return { success: false, message: data.message || 'Gagal memproses pesanan' };
     }
   } catch (error) {
-    return { success: false, message: 'Gagal terhubung ke Nexa Server. Pastikan deployment selesai.' };
+    return { success: false, message: 'Gagal terhubung ke Nexa Server. Hubungi Admin!' };
   }
 };
 
