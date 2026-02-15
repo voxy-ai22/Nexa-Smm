@@ -1,0 +1,7 @@
+{
+  "name": "Nexa SMM - Neobrutalist SMM Provider",
+  "description": "A high-performance Social Media Marketing panel with Anti-VPN security and 24-hour anti-spam protection, featuring a bold Black & White Neobrutalism UI.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
