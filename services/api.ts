@@ -10,11 +10,15 @@ const DB_KEY = 'nexa_db';
  */
 const db = {
   get: () => {
-    const data = localStorage.getItem(DB_KEY);
-    if (!data) {
+    try {
+      const data = localStorage.getItem(DB_KEY);
+      if (!data) {
+        return { orders: [], rate_limits: {} };
+      }
+      return JSON.parse(data);
+    } catch (e) {
       return { orders: [], rate_limits: {} };
     }
-    return JSON.parse(data);
   },
   save: (data: any) => {
     localStorage.setItem(DB_KEY, JSON.stringify(data));
@@ -58,7 +62,6 @@ const db = {
  */
 export const getIPInfo = async (): Promise<IPInfo> => {
   try {
-    // We use a high-quality IP info service that provides security flags
     const response = await fetch('https://ipapi.co/json/');
     if (!response.ok) throw new Error('Primary IP service failed');
     const data = await response.json();
@@ -106,12 +109,13 @@ export const submitOrder = async (
 ): Promise<{ success: boolean; orderId?: string; message: string }> => {
   const service = SERVICES[serviceType];
   
-  // Environment variables from .env
-  const apiId = process.env.SMM_API_ID || ''; 
-  const apiKey = process.env.SMM_API_KEY || '';
+  // Ambil environment variable dengan cara yang aman
+  const env = (typeof process !== 'undefined' && process.env) ? process.env : {};
+  const apiId = env.SMM_API_ID || ''; 
+  const apiKey = env.SMM_API_KEY || '';
 
   if (!apiId || !apiKey) {
-    return { success: false, message: 'System Error: API Configuration missing.' };
+    return { success: false, message: 'System Error: SMM_API_ID atau SMM_API_KEY belum di-set di environment Vercel.' };
   }
 
   try {
@@ -129,7 +133,6 @@ export const submitOrder = async (
 
     const data = await response.json();
 
-    // Persist to our "database"
     db.recordOrder(ip, service.id, {
       target_link: target,
       is_vpn: isVpn,
@@ -147,9 +150,6 @@ export const submitOrder = async (
   }
 };
 
-/**
- * Return logs if needed for internal debugging (not used in UI as requested).
- */
 export const getOrderLogs = (): OrderLog[] => {
   return db.get().orders;
 };

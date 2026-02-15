@@ -1,46 +1,41 @@
 
+import { GoogleGenAI } from "@google/genai";
+
 export const getLocalAiResponse = async (input: string): Promise<string> => {
-  const query = input.toLowerCase();
+  // Ambil environment variable dengan cara yang aman
+  const env = (typeof process !== 'undefined' && process.env) ? process.env : {};
+  const apiKey = env.API_KEY;
   
-  // Simulasi delay berfikir
-  await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1000));
-
-  // Heuristik Logika
-  if (query.includes("halo") || query.includes("hi") || query.includes("p")) {
-    return "Halo cuy! Nexa AI di sini. Mau optimasi akun apa kita hari ini? TikTok atau IG?";
-  }
-  
-  if (query.includes("tiktok") || query.includes("fyp")) {
-    return "Buat TikTok: Pastiin 3 detik pertama video kamu bikin orang berhenti scroll. Pake sound yang lagi naik daun di 'Creative Center' TikTok. Mau tips hashtag juga?";
+  if (!apiKey) {
+    return "Waduh cuy, API_KEY Gemini belum di-set di environment Vercel. Gue nggak bisa mikir jernih nih. Coba lapor admin!";
   }
 
-  if (query.includes("ig") || query.includes("instagram") || query.includes("reels")) {
-    return "Instagram sekarang lagi fokus ke 'Watch Time'. Pastiin Reels kamu punya loop yang smooth biar orang nonton berkali-kali. Itu rahasia explore!";
-  }
+  try {
+    const ai = new GoogleGenAI({ apiKey });
+    
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: input,
+      config: {
+        systemInstruction: `
+          Kamu adalah Nexa AI, asisten virtual dari platform Nexa SMM.
+          Kepribadian kamu: Tech-savvy, asik, profesional tapi santai, sering memanggil user dengan sebutan "cuy".
+          Keahlian kamu: Social Media Marketing (SMM), algoritma TikTok, Instagram, dan strategi viral marketing.
+          Tujuan kamu: Membantu user mendapatkan hasil maksimal dari layanan Nexa SMM dan memberikan tips organik.
+          Aturan:
+          - Jika user tanya soal SMM, berikan tips yang out-of-the-box.
+          - Selalu ingatkan user untuk tidak menggunakan VPN saat order di Nexa SMM.
+          - Jika user tanya cara pakai, jelaskan langkahnya: Pilih layanan, masukkan link, klik GAS.
+          - Gunakan bahasa Indonesia yang gaul tapi tetap solutif.
+        `,
+        temperature: 0.7,
+        topP: 0.95,
+      },
+    });
 
-  if (query.includes("limit") || query.includes("gagal") || query.includes("error")) {
-    return "Gagal? Cek 3 hal: 1. Jangan pake VPN. 2. Akun jangan di-private. 3. Link harus bener (link post, bukan profil). Limit kita 1x per 24 jam ya!";
+    return response.text || "Aduh, otak gue nge-blank bentar. Coba tanya lagi deh, cuy!";
+  } catch (error) {
+    console.error("Gemini AI Error:", error);
+    return "Lagi ada gangguan di server pusat nih, cuy. Coba lagi nanti ya!";
   }
-
-  if (query.includes("cara") || query.includes("pakai")) {
-    return "Gampang cuy: Pilih layanan -> Tempel link konten kamu -> Klik BOOST NOW. Sisanya biar Nexa yang kerja di belakang layar.";
-  }
-
-  if (query.includes("siapa") || query.includes("nexa")) {
-    return "Gue Nexa, asisten virtual SMM paling kenceng yang pernah ada. Gue dibuat buat bantuin lo dominasi algoritma tanpa ribet.";
-  }
-
-  if (query.includes("makasih") || query.includes("thanks") || query.includes("oke")) {
-    return "Sama-sama! Kabarin kalau orderannya udah masuk ya. Gas terus jangan kasih kendor!";
-  }
-
-  // Fallback Respon
-  const fallbacks = [
-    "Menarik. Tapi mending fokus ke konten yang 'shareable' dulu biar makin viral.",
-    "Gue kurang paham maksud lo, tapi saran gue: cek jam post lo, udah sesuai target audiens belum?",
-    "Pertanyaan bagus, tapi yang lebih penting: udah nyobain fitur Boost TikTok Nexa hari ini?",
-    "Coba tanya hal yang lebih spesifik soal SMM, gue siap jawab 24/7."
-  ];
-  
-  return fallbacks[Math.floor(Math.random() * fallbacks.length)];
 };
