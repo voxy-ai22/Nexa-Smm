@@ -1,41 +1,38 @@
 
-import { GoogleGenAI } from "@google/genai";
-
 export const getLocalAiResponse = async (input: string): Promise<string> => {
-  // Ambil environment variable dengan cara yang aman
-  const env = (typeof process !== 'undefined' && process.env) ? process.env : {};
-  const apiKey = env.API_KEY;
-  
-  if (!apiKey) {
-    return "Waduh cuy, API_KEY Gemini belum di-set di environment Vercel. Gue nggak bisa mikir jernih nih. Coba lapor admin!";
-  }
-
   try {
-    const ai = new GoogleGenAI({ apiKey });
+    // Instruksi ketat agar AI hanya fokus pada Nexa SMM
+    const systemPrompt = `Kamu adalah Nexa AI, asisten khusus layanan Nexa SMM. 
+    ATURAN KETAT:
+    1. HANYA JAWAB pertanyaan tentang Nexa SMM, strategi media sosial, cara tambah followers/likes, dan tips viral marketing.
+    2. Jika user bertanya hal di luar topik tersebut (seperti masak, matematika, politik, coding umum, dll), kamu HARUS menolak dengan sopan dan mengarahkan kembali ke topik SMM.
+    3. Gunakan gaya bahasa gaul, asik, dan panggil user "cuy".
+    4. Selalu ingatkan user: Jangan pakai VPN dan pastikan link benar.
     
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: input,
-      config: {
-        systemInstruction: `
-          Kamu adalah Nexa AI, asisten virtual dari platform Nexa SMM.
-          Kepribadian kamu: Tech-savvy, asik, profesional tapi santai, sering memanggil user dengan sebutan "cuy".
-          Keahlian kamu: Social Media Marketing (SMM), algoritma TikTok, Instagram, dan strategi viral marketing.
-          Tujuan kamu: Membantu user mendapatkan hasil maksimal dari layanan Nexa SMM dan memberikan tips organik.
-          Aturan:
-          - Jika user tanya soal SMM, berikan tips yang out-of-the-box.
-          - Selalu ingatkan user untuk tidak menggunakan VPN saat order di Nexa SMM.
-          - Jika user tanya cara pakai, jelaskan langkahnya: Pilih layanan, masukkan link, klik GAS.
-          - Gunakan bahasa Indonesia yang gaul tapi tetap solutif.
-        `,
-        temperature: 0.7,
-        topP: 0.95,
-      },
-    });
+    User bertanya: `;
 
-    return response.text || "Aduh, otak gue nge-blank bentar. Coba tanya lagi deh, cuy!";
+    const encodedText = encodeURIComponent(systemPrompt + input);
+    const apiUrl = `https://api.nexray.web.id/ai/deepseek?text=${encodedText}`;
+
+    const response = await fetch(apiUrl);
+    
+    if (!response.ok) {
+      throw new Error('API Response not ok');
+    }
+
+    const data = await response.json();
+    
+    // Asumsi response format dari API tersebut adalah { result: "..." } atau { text: "..." }
+    // Jika API mengembalikan string langsung, sesuaikan. Berdasarkan pola umum API NexRay:
+    const aiText = data.result || data.text || data.message || (typeof data === 'string' ? data : null);
+
+    if (!aiText) {
+      return "Aduh cuy, API NexRay lagi ngadat nih. Coba tanya lagi bentar lagi ya!";
+    }
+
+    return aiText;
   } catch (error) {
-    console.error("Gemini AI Error:", error);
-    return "Lagi ada gangguan di server pusat nih, cuy. Coba lagi nanti ya!";
+    console.error("DeepSeek API Error:", error);
+    return "Lagi ada gangguan koneksi ke otak AI gue nih, cuy. Coba lagi nanti ya!";
   }
 };
