@@ -157,7 +157,7 @@ const App: React.FC = () => {
                       disabled={ipInfo?.isVpn}
                       value={targetLink}
                       onChange={(e) => setTargetLink(e.target.value)}
-                      placeholder="https://www.tiktok.com/@user/video/..."
+                      placeholder="masukan Link nya"
                       className="w-full h-[60px] px-5 text-sm font-bold bg-white neo-border-sm focus:shadow-[4px_4px_0px_0px_#000] transition-all outline-none"
                     />
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-20"><i className="fa-solid fa-link"></i></div>
@@ -234,7 +234,7 @@ const App: React.FC = () => {
                   disabled={aiIsTyping}
                   className="bg-black text-white px-6 neo-border-sm border-black font-[900] text-xs uppercase hover:bg-gray-800 transition-all shadow-[4px_4px_0px_0px_#ccc]"
                 >
-                  RUN
+                  kirim
                 </button>
               </form>
             </NeobrutalistCard>
@@ -247,7 +247,7 @@ const App: React.FC = () => {
             <a href="https://chat.whatsapp.com/Figeaa78x9XAa6K6Wkd3d5?mode=gi_t" target="_blank" className="flex-1 text-center py-4 bg-white neo-border-sm text-[10px] font-[900] uppercase hover:bg-black hover:text-white transition-all hover:neo-shadow-sm">Group WA</a>
           </div>
           <div className="text-center">
-            <p className="text-[10px] font-[900] opacity-40 uppercase tracking-[4px] mb-2">NEXA SMM ECOSYSTEM</p>
+            <p className="text-[10px] font-[900] opacity-40 uppercase tracking-[4px] mb-2">NEXA SMM 2026</p>
           </div>
         </footer>
       </div>
