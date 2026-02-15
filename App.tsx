@@ -95,7 +95,7 @@ const App: React.FC = () => {
     <div className="min-h-screen flex flex-col items-center py-6 px-4 pb-24">
       <div className="w-[92%] max-w-[450px] flex flex-col gap-4">
         
-        {/* Top Status Bar - Changed to B&W */}
+        {/* Top Status Bar */}
         <div className="bg-black text-white neo-border-sm p-3 flex items-center justify-between font-[900] text-[10px] uppercase tracking-[2px]">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 bg-[#ADFF2F] rounded-full animate-pulse"></span>
@@ -182,7 +182,6 @@ const App: React.FC = () => {
                   </div>
                 )}
 
-                {/* Tombol Submit Utama - Tetap Hijau */}
                 <button
                   type="submit"
                   disabled={loading || ipInfo?.isVpn}
@@ -195,7 +194,7 @@ const App: React.FC = () => {
             )}
           </NeobrutalistCard>
 
-          {/* NEXA AI TERMINAL - Strictly Black & White */}
+          {/* NEXA AI TERMINAL */}
           <div id="ai-section" className="scroll-mt-6">
             <NeobrutalistCard title="Nexa AI Terminal" className="bg-white text-black border-black flex flex-col h-[400px] shadow-[8px_8px_0px_0px_#000]">
               <div className="flex-1 overflow-y-auto mb-4 space-y-4 pr-2 custom-scrollbar font-mono">
@@ -247,12 +246,13 @@ const App: React.FC = () => {
             <a href="https://chat.whatsapp.com/Figeaa78x9XAa6K6Wkd3d5?mode=gi_t" target="_blank" className="flex-1 text-center py-4 bg-white neo-border-sm text-[10px] font-[900] uppercase hover:bg-black hover:text-white transition-all hover:neo-shadow-sm">Group WA</a>
           </div>
           <div className="text-center">
-            <p className="text-[10px] font-[900] opacity-40 uppercase tracking-[4px] mb-2">NEXA SMM ECOSYSTEM</p>
+            <p className="text-[12px] font-[900] text-black uppercase tracking-[4px] mb-1">NEXA SMM ECOSYSTEM</p>
+            <p className="text-[10px] font-[700] opacity-60 uppercase">©Nexa Smm 2026</p>
           </div>
         </footer>
       </div>
 
-      {/* Floating AI Bubble - Changed to B&W */}
+      {/* Floating AI Bubble */}
       <button 
         onClick={() => document.getElementById('ai-section')?.scrollIntoView({ behavior: 'smooth' })}
         className="fixed bottom-6 right-6 w-14 h-14 bg-white text-black rounded-none neo-border neo-shadow flex items-center justify-center text-2xl hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all z-50 group"
